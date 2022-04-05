@@ -9,11 +9,20 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { BrowserRouter as Router, NavLink } from "react-router-dom";
 import { actionTypes } from '../reducer';
-
 const SearchPage = () => {
+    // const [dispatch] = useStateValue();
+    // if(localStorage.getItem('term')){
+    //     dispatch({
+    //         type: actionTypes.SET_SEARCH_TERM,
+    //         term: localStorage.getItem('term')
+    //     });
+    // }
     const [{term},dispatch] = useStateValue();
     const inputref = useRef("");
+    console.log('term1',term);
+
     const {data} = useGoogleSearch(term);
+    // console.log(data ? data.items[0].pagemap.cse_thumbnail[0].src : "nothing")
     const submitHandler =(e) => {
         e.preventDefault();
         dispatch({
@@ -47,10 +56,16 @@ const SearchPage = () => {
             </div>
             <div className="searchpage_content_wrapper">
                 <div className="content1">
-                    {data ? data.items.map(item=><div className="content">
-                        <h4>{item.link}</h4>
-                        <a href={item.link}>{item.title}</a>
-                        <p>{item.snippet}</p>
+                    {data ? data.items.map(item=><div className="content_wrapper" key={item.cacheId}>
+                        <div className="content_image">
+                        {item.pagemap.cse_thumbnail ? <img src={item.pagemap.cse_thumbnail[0].src}/>:<img src="https://image.shutterstock.com/image-vector/question-mark-icon-sign-design-260nw-784454707.jpg"/>}
+                        </div>
+                        <div className="content">
+                            <h4>{item.link}</h4>
+                            <a href={item.link}>{item.title}</a>
+                            <p>{item.snippet}</p>
+                        </div>
+
                     </div>) :<CircularProgress className="circularprogress"/>}
                 </div>
 
